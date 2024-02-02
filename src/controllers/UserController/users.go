@@ -130,7 +130,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		item := map[string]string{
 			"Message": "HI, " + user.Name + " as a " + user.Role,
 			"Email":   input.Email,
-			"Role":   input.Role,
+			"Role":   user.Role,
 			"Token":   token,
 		}
 
