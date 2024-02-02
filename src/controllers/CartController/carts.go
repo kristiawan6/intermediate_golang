@@ -17,8 +17,7 @@ func Data_carts(w http.ResponseWriter, r *http.Request) {
 		pageStr := r.URL.Query().Get("page")
 		limitStr := r.URL.Query().Get("limit")
 
-		page := 1
-		limit := 10
+		var page, limit int
 
 		if pageStr != "" {
 			page, _ = strconv.Atoi(pageStr)
