@@ -29,7 +29,7 @@ func RefreshToken(secretKey, email string, role string) (refreshToken string, er
 	refreshTokenClaims := jwt.New(jwt.SigningMethodHS256).Claims.(jwt.MapClaims)
 	refreshTokenClaims["email"] = email
 	refreshTokenClaims["role"] = role
-	refreshTokenClaims["exp"] = time.Now().Add(time.Hour * 24).Unix() 
+	refreshTokenClaims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
 	refreshToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, refreshTokenClaims).SignedString([]byte(secretKey))
 	if err != nil {

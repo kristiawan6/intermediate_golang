@@ -135,7 +135,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 
 		result, _ := json.Marshal(item)
-
 		if _, err := w.Write(result); err != nil {
 			http.Error(w, "Failed to write response", http.StatusInternalServerError)
 			return

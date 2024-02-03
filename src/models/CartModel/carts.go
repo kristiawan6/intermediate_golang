@@ -13,20 +13,9 @@ type Cart struct {
 	ProductId int
 }
 
-func SelectAllCartPaginated(page, limit int) ([]Cart, int, error) {
-	var items []Cart
-	var totalCount int
-
-	config.DB.Model(&Cart{}).Count(&totalCount)
-
-	offset := (page - 1) * limit
-
-	err := config.DB.Offset(offset).Limit(limit).Find(&items).Error
-	if err != nil {
-		return nil, 0, err
-	}
-
-	return items, totalCount, nil
+func SelectAllCart() *gorm.DB {
+	items := []Cart{}
+	return config.DB.Find(&items)
 }
 
 func SelectCartById(id string) *gorm.DB {
@@ -48,8 +37,19 @@ func DeleteCart(id string) *gorm.DB {
 	return config.DB.Delete(&item, "id = ?", id)
 }
 
+func FindData(id string) *gorm.DB {
+	items := []Cart{}
+	id = "%" + id + "%"
+	return config.DB.Where("id LIKE ?", id).Find(&items)
+}
+
+func FindCond(sort string,limit int, offset int) *gorm.DB {
+	item := []Cart{}
+	return config.DB.Order(sort).Limit(limit).Offset(offset).Find(&item)
+}
+
 func CountData() int {
-	var item int
-	config.DB.Table("carts").Count(&item)
-	return item
+    var item int
+    config.DB.Table("carts").Where("deleted_at IS NULL").Count(&item)
+    return item
 }

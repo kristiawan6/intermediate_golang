@@ -12,7 +12,6 @@ import (
 	"net/http"
 
 	"github.com/goddtriffin/helmet"
-
 )
 
 func Router() {
@@ -28,25 +27,24 @@ func Router() {
 	http.Handle("/login", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(usercontroller.Login))))
 	http.Handle("/register-seller", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(usercontroller.SellerRegister))))
 	http.Handle("/register-customer", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(usercontroller.CustomerRegister))))
-	
-	/* --------------------------------------------- XSS MIDDLEWARE ROUTES --------------------------------------------*/
 
+	/* --------------------------------------------- XSS MIDDLEWARE ROUTES --------------------------------------------*/
 
 	//Routes User
 
 	// http.Handle("/update-seller/", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(usercontroller.Update_seller))))
 	// http.Handle("/update-customer/", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(usercontroller.Update_customer))))
-	
+
 	// http.Handle("/users", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(usercontroller.Data_users))))
 	// http.Handle("/user/", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(usercontroller.Data_user))))
-	
+
 	// //Route Refresh Token
 	// http.Handle("/refresh-token", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(usercontroller.RefreshToken))))
-	
+
 	// //Route Upload
 	// http.Handle("/upload", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(productcontroller.HandleUpload))))
 	// http.Handle("/upload", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(productcontroller.HandleUpload))))
-	
+
 	// //Routes Product
 	// http.Handle("/products", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(productcontroller.Data_products))))
 	// http.Handle("/product/", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(productcontroller.Data_product))))
@@ -68,20 +66,20 @@ func Router() {
 	// http.Handle("/payment/", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(paymentcontroller.Data_payment))))
 
 	/* --------------------------------------------- JWT MIDDLEWARE ROUTES --------------------------------------------*/
-	
+
 	//Routes User
 	http.Handle("/update-seller/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(usercontroller.Update_seller))))
 	http.Handle("/update-customer/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(usercontroller.Update_customer))))
-	
+
 	http.Handle("/users", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(usercontroller.Data_users))))
 	http.Handle("/user/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(usercontroller.Data_user))))
-	
+
 	//Route Refresh Token
 	http.Handle("/refresh-token", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(usercontroller.RefreshToken))))
-	
+
 	//Route Upload
 	http.Handle("/upload", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.HandleUpload))))
-	
+
 	//Routes Product
 	http.Handle("/products", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Data_products))))
 	http.Handle("/product/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Data_product))))
@@ -89,10 +87,12 @@ func Router() {
 	//Routes Category
 	http.Handle("/categories", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(categorycontroller.Data_categories))))
 	http.Handle("/category/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(categorycontroller.Data_category))))
+	http.Handle("/search", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(categorycontroller.Search_category))))
 
 	//Routes Cart
 	http.Handle("/carts", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(cartcontroller.Data_carts))))
 	http.Handle("/cart/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(cartcontroller.Data_cart))))
+	http.Handle("/search", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(cartcontroller.Search_cart))))
 
 	//Routes Order
 	http.Handle("/orders", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(ordercontroller.Data_orders))))

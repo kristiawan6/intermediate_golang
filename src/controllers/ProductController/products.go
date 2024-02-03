@@ -25,7 +25,14 @@ func Data_products(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		return
-	} else if r.Method == "POST" {
+	} else {
+		http.Error(w, "Method tidak Diizinkan", http.StatusMethodNotAllowed)
+	}
+}
+
+func Add_products(w http.ResponseWriter, r *http.Request) {
+	helper.EnableCors(w)
+	if r.Method == "POST" {
 		var product models.Product
 		err := json.NewDecoder(r.Body).Decode(&product)
 		if err != nil {
@@ -60,6 +67,7 @@ func Data_products(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Method tidak Diizinkan", http.StatusMethodNotAllowed)
 	}
+
 }
 
 func Data_product(w http.ResponseWriter, r *http.Request) {

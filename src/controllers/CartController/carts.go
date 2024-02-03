@@ -8,16 +8,17 @@ import (
 	"math"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func Data_carts(w http.ResponseWriter, r *http.Request) {
 	middleware.GetCleanedInput(r)
 	helper.EnableCors(w)
 	if r.Method == http.MethodGet {
+		var page, limit int
+
 		pageStr := r.URL.Query().Get("page")
 		limitStr := r.URL.Query().Get("limit")
-
-		var page, limit int
 
 		if pageStr != "" {
 			page, _ = strconv.Atoi(pageStr)
@@ -27,22 +28,31 @@ func Data_carts(w http.ResponseWriter, r *http.Request) {
 			limit, _ = strconv.Atoi(limitStr)
 		}
 
-		items, totalCount, err := models.SelectAllCartPaginated(page, limit)
-		if err != nil {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-			return
-		}
+		offset := (page - 1)*limit
 
-		response := map[string]interface{}{
+		sort := r.URL.Query().Get("sort")
+		if sort == "" {
+			sort = "ASC"
+		}
+		sortBy := r.URL.Query().Get("sortBy")
+		if sortBy == "" {
+			sortBy = "id"
+		}
+		sort = sortBy + " " + strings.ToLower(sort)
+		response := models.FindCond(sort, limit, offset)
+		totalData := models.CountData()
+		totalPage := math.Ceil(float64(totalData)/float64(limit))
+
+		result := map[string]interface{}{
 			"status":      "Success",
-			"data":        items,
+			"data":        response.Value,
 			"currentPage": page,
 			"limit":       limit,
-			"totalData":   totalCount,
-			"totalPage":   int(math.Ceil(float64(totalCount) / float64(limit))),
+			"totalData":   totalData,
+			"totalPage":   totalPage,
 		}
 
-		res, err := json.Marshal(response)
+		res, err := json.Marshal(result)
 		if err != nil {
 			http.Error(w, "Failed to convert to JSON", http.StatusInternalServerError)
 			return
@@ -142,4 +152,15 @@ func Data_cart(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Method tidak diizinkan", http.StatusMethodNotAllowed)
 	}
+}
+
+func Search_cart(w http.ResponseWriter, r *http.Request) {
+	keyWord := r.URL.Query().Get("search")
+	res, err := json.Marshal(models.FindData(keyWord).Value)
+	if err != nil {
+		http.Error(w, "Gagal Konversi Json", http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(res)
 }
