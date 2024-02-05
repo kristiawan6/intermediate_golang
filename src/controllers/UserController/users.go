@@ -108,33 +108,33 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		users := models.FindEmail(&input)
-		if len(users) == 0 {
+		user, err := models.FindEmail(input.Email)
+		if err != nil {
 			fmt.Fprintf(w, "Email not Found")
 			return
 		}
 
-		user := users[0]
 		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
 			fmt.Fprintf(w, "Password not Found")
 			return
 		}
 
 		jwtKey := os.Getenv("SECRETKEY")
-		token, err := helper.GenerateToken(jwtKey, input.Email, input.Role)
+		token, err := helper.GenerateToken(jwtKey, input.Email, user.Role)
 		if err != nil {
 			http.Error(w, "Failed to generate tokens", http.StatusInternalServerError)
 			return
 		}
-
+		fmt.Println(token, input.Email, user.Role)
 		item := map[string]string{
 			"Message": "HI, " + user.Name + " as a " + user.Role,
 			"Email":   input.Email,
-			"Role":   user.Role,
+			"Role":    user.Role,
 			"Token":   token,
 		}
 
 		result, _ := json.Marshal(item)
+		// result, _ := json.Marshal("item")
 		if _, err := w.Write(result); err != nil {
 			http.Error(w, "Failed to write response", http.StatusInternalServerError)
 			return

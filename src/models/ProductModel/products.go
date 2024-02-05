@@ -41,3 +41,20 @@ func DeletesProduct(id string) *gorm.DB {
 	var item Product
 	return config.DB.Delete(&item, "id = ?", id)
 }
+
+func FindData(keyword string) *gorm.DB {
+    items := []Product{}
+    keyword = "%" + keyword + "%"
+   return config.DB.Where("CAST(id AS TEXT) LIKE ? OR name LIKE ? OR CAST(price AS TEXT) LIKE ? OR CAST(stock AS TEXT) LIKE ? OR description LIKE ? OR condition LIKE ? OR size LIKE ? ", keyword, keyword, keyword,keyword, keyword, keyword, keyword).Find(&items)
+}
+
+func FindCond(sort string,limit int, offset int) *gorm.DB {
+	item := []Product{}
+	return config.DB.Order(sort).Limit(limit).Offset(offset).Find(&item)
+}
+
+func CountData() int {
+    var item int
+    config.DB.Table("products").Where("deleted_at IS NULL").Count(&item)
+    return item
+}

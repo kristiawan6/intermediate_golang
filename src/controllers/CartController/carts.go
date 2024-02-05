@@ -161,6 +161,5 @@ func Search_cart(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Gagal Konversi Json", http.StatusInternalServerError)
 		return
 	}
-
 	w.Write(res)
 }

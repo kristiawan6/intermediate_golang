@@ -37,10 +37,10 @@ func DeleteCart(id string) *gorm.DB {
 	return config.DB.Delete(&item, "id = ?", id)
 }
 
-func FindData(id string) *gorm.DB {
-	items := []Cart{}
-	id = "%" + id + "%"
-	return config.DB.Where("id LIKE ?", id).Find(&items)
+func FindData(keyword string) *gorm.DB {
+    items := []Cart{}
+    keyword = "%" + keyword + "%"
+   return config.DB.Where("CAST(id AS TEXT) LIKE ? OR CAST(quantity AS TEXT) LIKE ? OR CAST(product_id AS TEXT) LIKE ? OR CAST(amount AS TEXT) LIKE ?", keyword, keyword, keyword,keyword).Find(&items)
 }
 
 func FindCond(sort string,limit int, offset int) *gorm.DB {

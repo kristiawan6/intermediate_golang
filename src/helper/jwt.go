@@ -12,6 +12,7 @@ func GenerateToken(secretKey, email string, role string) (string, error) {
 	claims := token.Claims.(jwt.MapClaims)
 
 	claims["email"] = email
+	
 	claims["role"] = role
 
 	claims["exp"] = time.Now().Add(time.Hour * 1).Unix()

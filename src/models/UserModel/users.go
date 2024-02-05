@@ -8,12 +8,12 @@ import (
 
 type User struct {
 	gorm.Model
-	Name string
-	Email string
+	Name        string
+	Email       string
 	Phonenumber string
-	Storename string
-	Password string
-	Role string
+	Storename   string
+	Password    string
+	Role        string
 }
 
 func SelectAllUser() *gorm.DB {
@@ -45,8 +45,18 @@ func DeleteUser(id string) *gorm.DB {
 	return config.DB.Delete(&item, "id = ?", id)
 }
 
-func FindEmail(input *User) []User {
-	items := []User{}
-	config.DB.Raw("SELECT * FROM users WHERE email = ?", input.Email).Scan(&items)
-	return items
+func FindEmail(email string) (User, error) {
+    var item User
+    if err := config.DB.Raw("SELECT * FROM users WHERE email = ?", email).Scan(&item).Error; err != nil {
+        return User{}, err
+    }
+    return item, nil
+}
+
+func FindRole(email string) (string, error) {
+    user, err := FindEmail(email)
+    if err != nil {
+        return "", err
+    }
+    return user.Role, nil
 }

@@ -157,6 +157,5 @@ func Search_category(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Gagal Konversi Json", http.StatusInternalServerError)
 		return
 	}
-
 	w.Write(res)
 }
