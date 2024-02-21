@@ -70,7 +70,7 @@ func Router() {
 	//Routes User
 	http.Handle("/update-seller/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(usercontroller.Update_seller))))
 	http.Handle("/update-customer/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(usercontroller.Update_customer))))
-
+	
 	http.Handle("/users", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(usercontroller.Data_users))))
 	http.Handle("/user/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(usercontroller.Data_user))))
 
@@ -81,7 +81,7 @@ func Router() {
 	http.Handle("/upload", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.HandleUpload))))
 
 	//Routes Product
-	http.Handle("/products", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Data_products))))
+	http.Handle("/products",(http.HandlerFunc(usercontroller.RefreshToken)))
 	http.Handle("/add_product", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Add_products))))
 	// http.Handle("/add_product", helmet.Secure(middleware.JwtMiddleware("Seller")(http.HandlerFunc(productcontroller.Add_products))))
 	http.Handle("/product/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Data_product))))

@@ -12,8 +12,6 @@ import (
 )
 
 func Data_carts(w http.ResponseWriter, r *http.Request) {
-	middleware.GetCleanedInput(r)
-	helper.EnableCors(w)
 	if r.Method == http.MethodGet {
 		var page, limit int
 
