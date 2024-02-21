@@ -19,8 +19,8 @@ func main() {
 	helper.Migration()
 	defer config.DB.Close()
 	routes.Router()
-	fmt.Print("Server running at http://localhost:8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	fmt.Print("Server running at http://localhost:3000")
+	if err := http.ListenAndServe(":3000", nil); err != nil {
 		fmt.Println("Error starting server:", err)
 		return
 	}
