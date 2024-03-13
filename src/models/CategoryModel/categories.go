@@ -41,13 +41,13 @@ func FindData(name string) *gorm.DB {
 	return config.DB.Where("name LIKE ?", name).Find(&items)
 }
 
-func FindCond(sort string,limit int, offset int) *gorm.DB {
+func FindCond(sort string, limit int, offset int) *gorm.DB {
 	item := []Category{}
 	return config.DB.Order(sort).Limit(limit).Offset(offset).Find(&item)
 }
 
 func CountData() int {
-    var item int
-    config.DB.Table("categories").Where("deleted_at IS NULL").Count(&item)
-    return item
+	var item int
+	config.DB.Table("categories").Where("deleted_at IS NULL").Count(&item)
+	return item
 }

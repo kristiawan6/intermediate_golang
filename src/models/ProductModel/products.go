@@ -3,7 +3,7 @@ package productmodel
 import (
 	"blanja_api/src/config"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type Product struct {
@@ -15,46 +15,63 @@ type Product struct {
 	Condition   string
 	Size        string
 	UserId      int
-	CategoryId  int
+	CategoryId  uint
+	Category    Category `gorm:"foreignKey:CategoryId"`
 }
 
-func SelectAllProduct() *gorm.DB {
-	items := []Product{}
-	return config.DB.Find(&items)
+type Category struct {
+	gorm.Model
+	Name string
 }
 
-func SelectProductById(id string) *gorm.DB {
+func SelectAllProduct() []*Product {
+	items := []*Product{}
+	config.DB.Find(&items)
+	return items
+}
+
+func SelectProductById(id string) *Product {
 	var item Product
-	return config.DB.First(&item, "id = ?", id)
+	if err := config.DB.Preload("Category").First(&item, "id = ?", id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil
+		}
+		return nil
+	}
+	return &item
 }
 
-func PostProduct(item *Product) *gorm.DB {
-	return config.DB.Create(&item)
+func PostProduct(item *Product) *Product {
+	config.DB.Create(&item)
+	return item
 }
 
-func UpdatesProduct(id string, newProduct *Product) *gorm.DB {
+func UpdatesProduct(id string, newProduct *Product) *Product {
 	var item Product
-	return config.DB.Model(&item).Where("id = ?", id).Updates(&newProduct)
+	config.DB.Model(&item).Where("id = ?", id).Updates(newProduct)
+	return &item
 }
 
-func DeletesProduct(id string) *gorm.DB {
+func DeletesProduct(id string) {
 	var item Product
-	return config.DB.Delete(&item, "id = ?", id)
+	config.DB.Delete(&item, "id = ?", id)
 }
 
-func FindData(keyword string) *gorm.DB {
-	items := []Product{}
+func FindData(keyword string) []*Product {
+	items := []*Product{}
 	keyword = "%" + keyword + "%"
-	return config.DB.Where("CAST(id AS TEXT) LIKE ? OR name LIKE ? OR CAST(price AS TEXT) LIKE ? OR CAST(stock AS TEXT) LIKE ? OR description LIKE ? OR condition LIKE ? OR size LIKE ? ", keyword, keyword, keyword, keyword, keyword, keyword, keyword).Find(&items)
+	config.DB.Where("CAST(id AS TEXT) LIKE ? OR name LIKE ? OR CAST(price AS TEXT) LIKE ? OR CAST(stock AS TEXT) LIKE ? OR description LIKE ? OR condition LIKE ? OR size LIKE ? ", keyword, keyword, keyword, keyword, keyword, keyword, keyword).Find(&items)
+	return items
 }
 
-func FindCond(sort string, limit int, offset int) *gorm.DB {
-	item := []Product{}
-	return config.DB.Order(sort).Limit(limit).Offset(offset).Find(&item)
+func FindCond(sort string, limit int, offset int) []*Product {
+	item := []*Product{}
+	config.DB.Order(sort).Limit(limit).Offset(offset).Preload("Category").Find(&item)
+	return item
 }
 
-func CountData() int {
-	var item int
+func CountData() int64 {
+	var item int64
 	config.DB.Table("products").Where("deleted_at IS NULL").Count(&item)
 	return item
 }

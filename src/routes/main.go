@@ -46,12 +46,12 @@ func Router() {
 	// http.Handle("/upload", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(productcontroller.HandleUpload))))
 
 	// //Routes Product
-	// http.Handle("/products", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(productcontroller.Data_products))))
-	// http.Handle("/product/", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(productcontroller.Data_product))))
+	http.Handle("/products", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(productcontroller.DataProducts))))
+	http.Handle("/product/", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(productcontroller.DataProduct))))
 
 	// //Routes Category
-	// http.Handle("/categories", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(categorycontroller.Data_categories))))
-	// http.Handle("/category/", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(categorycontroller.Data_category))))
+	http.Handle("/categories", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(categorycontroller.Data_categories))))
+	http.Handle("/category/", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(categorycontroller.Data_category))))
 
 	// //Routes Cart
 	// http.Handle("/carts", helmet.Secure(middleware.XssMiddleware(http.HandlerFunc(cartcontroller.Data_carts))))
@@ -81,16 +81,16 @@ func Router() {
 	http.Handle("/upload", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.HandleUpload))))
 
 	//Routes Product
-	http.Handle("/products",(http.HandlerFunc(usercontroller.RefreshToken)))
-	http.Handle("/add_product", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Add_products))))
+	// http.Handle("/products",(http.HandlerFunc(usercontroller.RefreshToken)))
+	// http.Handle("/add_product", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Add_products))))
 	// http.Handle("/add_product", helmet.Secure(middleware.JwtMiddleware("Seller")(http.HandlerFunc(productcontroller.Add_products))))
-	http.Handle("/product/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Data_product))))
-	http.Handle("/search-product", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Search_product))))
+	// http.Handle("/product/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Data_product))))
+	// http.Handle("/search-product", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(productcontroller.Search_product))))
 
 	//Routes Category
-	http.Handle("/categories", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(categorycontroller.Data_categories))))
-	http.Handle("/category/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(categorycontroller.Data_category))))
-	http.Handle("/search-category", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(categorycontroller.Search_category))))
+	// http.Handle("/categories", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(categorycontroller.Data_categories))))
+	// http.Handle("/category/", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(categorycontroller.Data_category))))
+	// http.Handle("/search-category", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(categorycontroller.Search_category))))
 
 	//Routes Cart
 	http.Handle("/carts", helmet.Secure(middleware.JwtMiddleware(http.HandlerFunc(cartcontroller.Data_carts))))
